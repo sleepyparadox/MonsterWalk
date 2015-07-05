@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class Locomotion
 {
+    public static int FramesPerTest = 60 * 5;
+
     public readonly int Index;
     public float FinalScore;
     public Color Color;
@@ -31,10 +33,10 @@ public class Locomotion
             Color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
         }
 
-        const int MonsPerRow = 7;
+        const int MonsPerRow = 10;
         var pos = new Vector3((index % MonsPerRow) * 3f, -1.38f, Mathf.Floor(index / MonsPerRow) * 6f);
 
-        var physicsLayer = 8 + index;
+        var physicsLayer = 8 + (index % 20);
         _monster = new Monster(physicsLayer, Color);
         _monster.Transform.position = pos;
 
@@ -67,7 +69,7 @@ public class Locomotion
         if(!Finished)
         {
             _frames++;
-            if (_frames > 60 * 10)
+            if (_frames > FramesPerTest)
                 Finished = true;
 
             for (var i = 0; i < Steps.Count; ++i )
@@ -90,7 +92,7 @@ public class Locomotion
 
             var dist = _monster.Joints.Values.Max(j => j.transform.position.z) - _monster.WorldPosition.z;
 
-            FinalScore = dist + _monster.Joints["Head"].position.y;
+            FinalScore = dist + _monster.Joints["Head"].position.y + _monster.Joints["Waist"].position.y;
         }
     }
 

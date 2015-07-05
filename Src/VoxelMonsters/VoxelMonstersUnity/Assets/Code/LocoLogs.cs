@@ -10,6 +10,20 @@ public class LocoLogs
     string _dir;
     StreamWriter _indexWriter;
 
+    public static List<List<LocoLogs>> GetBestMonstersOnFile()
+    {
+        var mons = new List<List<LocoLogs>> ();
+        var indexPath = Directory.GetCurrentDirectory() + "/Locos/Local/_index.csv";
+
+        if (!File.Exists(indexPath))
+            return mons;
+
+        var lines = File.ReadAllLines(indexPath);
+
+        return mons;
+    }
+
+
     public LocoLogs()
     {
         var dirUnique = Guid.NewGuid().ToString().Split('-')[0];

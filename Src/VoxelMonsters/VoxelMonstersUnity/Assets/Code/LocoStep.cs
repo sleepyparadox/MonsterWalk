@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class LocoStep
 {
-    public const float GaitDuration = 5f;
+    public const float GaitDuration = 2.5f;
 
     public string Joint;
     public float At;

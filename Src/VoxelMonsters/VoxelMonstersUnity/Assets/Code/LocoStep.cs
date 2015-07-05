@@ -17,42 +17,59 @@ public class LocoStep
     public float LastAt = -10000;
     public float NextAt = 10000;
 
+    const float MaxForce = 100 * 10000f;
+
     public static LocoStep SpawnNew(string joint)
     {
         return new LocoStep()
         {
             Joint = joint,
             At = UnityEngine.Random.Range(0f, LocoStep.GaitDuration),
-            Force = UnityEngine.Random.Range(1, 100) * 1000f,
+            Force = UnityEngine.Random.Range(1, 100) * 10000f,
             Duration = UnityEngine.Random.Range(0f, LocoStep.GaitDuration),
             Rotation = new Vector3(UnityEngine.Random.Range(-1, 1), UnityEngine.Random.Range(-1, 1), UnityEngine.Random.Range(-1, 1))
         };
     }
 
-    static LocoStep Mutate(LocoStep source, float mutateAmount)
+    static LocoStep Mutate(LocoStep source)
     {
         //Spawn a new mutant
         var mutant = SpawnNew(source.Joint);
 
         //Inherit from src properties
-        mutant.At = Mathf.Lerp(source.At, mutant.At, mutateAmount);
-        mutant.Force = Mathf.Lerp(source.Force, mutant.Force, mutateAmount);
-        mutant.Duration = Mathf.Lerp(source.Duration, mutant.Duration, mutateAmount);
-        mutant.Rotation = new Vector3(Mathf.Lerp(source.Rotation.x, mutant.Rotation.x, mutateAmount),
-                                        Mathf.Lerp(source.Rotation.y, mutant.Rotation.y, mutateAmount),
-                                        Mathf.Lerp(source.Rotation.y, mutant.Rotation.y, mutateAmount));
+        mutant.At += Gaussian.RandomHalfHalf() * LocoStep.GaitDuration;
+        while (mutant.At >= LocoStep.GaitDuration)
+            mutant.At -= LocoStep.GaitDuration;
+        while (mutant.At < 0)
+            mutant.At += LocoStep.GaitDuration;
+
+        mutant.Force += Gaussian.RandomHalfHalf() * MaxForce;
+        mutant.Force = Mathf.Clamp(mutant.Force, 0, MaxForce);
+
+        mutant.Duration += Gaussian.RandomHalfHalf() * LocoStep.GaitDuration;
+        mutant.Duration = Mathf.Clamp(mutant.Duration, 0, MaxForce);
+
+        mutant.Rotation += new Vector3(Gaussian.RandomHalfHalf(), Gaussian.RandomHalfHalf(), Gaussian.RandomHalfHalf());
+        mutant.Duration = Mathf.Clamp(mutant.Duration, 0, MaxForce);
 
         return mutant;
     }
 
-    public static List<LocoStep> Mutate(List<LocoStep> src, float mutateAmount)
+    public static List<LocoStep> Mutate(List<LocoStep> src)
     {
         var mutants = new List<LocoStep>();
         for (var i = 0; i < src.Count; ++i)
         {
-            mutants.Add(Mutate(src[i], mutateAmount));
+            mutants.Add(Mutate(src[i]));
         }
         return mutants;
+    }
+
+    public static Color Mutate(Color src)
+    {
+        return new Color(Mathf.Clamp01(src.r + Gaussian.RandomHalfHalf()),
+                    Mathf.Clamp01(src.g + Gaussian.RandomHalfHalf()),
+                    Mathf.Clamp01(src.b + Gaussian.RandomHalfHalf()));
     }
 }
 

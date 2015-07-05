@@ -9,26 +9,39 @@ using UnityEngine;
 public class Locomotion
 {
     public readonly int Index;
-    public float BestScore;
+    public float FinalScore;
+    public Color Color;
     public List<LocoStep> Steps;
-    private TinyCoro _coro;
     private Monster _monster;
-    
-    public Locomotion(int index, List<LocoStep> parentSteps, float mutateAmount)
+    public bool Finished;
+    int _frames;
+    float _time = 0f;
+
+    public Locomotion(int index, Locomotion parent)
         : base()
     {
         Index = index;
-        _monster = new Monster();
-        //Place in rows of 10
-        _monster.Transform.position = new Vector3((index % 10) * 3f, -1.38f, Mathf.Floor(index / 10) * 6f);
-        //Don't collide
-        _monster.GameObject.layer = 8 + index;
-        
-        _coro = TinyCoro.SpawnNext(DoLocomotion);
 
-        if(parentSteps != null)
+        if (parent != null)
         {
-            Steps = LocoStep.Mutate(parentSteps, mutateAmount);
+            Color = LocoStep.Mutate(parent.Color);
+        }
+        else
+        {
+            Color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+        }
+
+        const int MonsPerRow = 7;
+        var pos = new Vector3((index % MonsPerRow) * 3f, -1.38f, Mathf.Floor(index / MonsPerRow) * 6f);
+
+        var physicsLayer = 8 + index;
+        _monster = new Monster(physicsLayer, Color);
+        _monster.Transform.position = pos;
+
+
+        if (parent != null)
+        {
+            Steps = LocoStep.Mutate(parent.Steps);
         }
         else
         {
@@ -40,51 +53,49 @@ public class Locomotion
                 Steps.Add(LocoStep.SpawnNew(temp));
             }
         }
-    }
 
-
-    IEnumerator DoLocomotion()
-    {
-        //Init .NextAt
         for (var i = 0; i < Steps.Count; ++i)
             Steps[i].NextAt = Steps[i].At;
+        _monster.UnityFixedUpdate += OnFixedUpdate;
+    }
 
-        float time = 0f;
-        var scores = new List<float>();
-        while(true)
+   
+    void OnFixedUpdate(UnityObject me)
+    {
+        _time += Time.fixedDeltaTime;
+        
+        if(!Finished)
         {
-            time += Time.deltaTime;
+            _frames++;
+            if (_frames > 60 * 10)
+                Finished = true;
+
             for (var i = 0; i < Steps.Count; ++i )
             {
                 var step = Steps[i];
-                if (time >= step.NextAt)
+                if (_time >= step.NextAt)
                 {
                     step.LastAt = step.NextAt;
                     step.NextAt += LocoStep.GaitDuration;
                 }
 
-                if (time >= step.LastAt && time < step.LastAt + step.Duration)
+                if (_time >= step.LastAt && _time < step.LastAt + step.Duration)
                 {
                     //Todo fix literal edge case
-                    //var dt = Mathf.Min(time - step.LastAt, Time.deltaTime);
-                    var dt = Time.deltaTime;
+                    //var dt = Mathf.Min(_time - step.LastAt, Time.fixedDeltaTime);
+                    var dt = Time.fixedDeltaTime;
                     _monster.Joints[step.Joint].AddRelativeTorque(step.Rotation * step.Force * dt);
                 }
-
             }
 
-            var score = _monster.Joints.Values.Max(j => j.transform.position.z) - _monster.WorldPosition.z;
-            BestScore = Mathf.Max(BestScore, score);
+            var dist = _monster.Joints.Values.Max(j => j.transform.position.z) - _monster.WorldPosition.z;
 
-            yield return null;
+            FinalScore = dist + _monster.Joints["Head"].position.y;
         }
     }
 
-    
-
     public void Stop()
     {
-        _coro.Kill();
         _monster.Dispose();
     }
 }

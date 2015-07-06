@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{155C72DE-D405-4586-8392-A95A041C47E5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VoxelMonsters</RootNamespace>
+    <AssemblyName>VoxelMonsters</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>VoxelMonstersUnity\Assets\Plugins\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>C:\Program Files\Unity 5.1.1f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>C:\Program Files\Unity 5.1.1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\Assets.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\Code\Gaussian.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\Code\LocoLogs.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\Code\Locomotion.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\Code\LocoStep.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\Code\Monster.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\Code\LocomotionTester.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Asset\Asset.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Asset\AssetDirectory.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Asset\AssetGenerator.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Asset\AudioClipAsset.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Asset\MaterialAsset.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Asset\PrefabAsset.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Asset\Texture2DAsset.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Editor\AssetGeneratorMenuItem.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\Editor\UnityObjectInspector.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\TinyCoro\TinyCoro.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\TinyCoro\TinyCoroStatic.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\TinyCoro\TinyThread.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\UnityObject\ShowInInspector.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\UnityObject\UnityEventAction.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\UnityObject\UnityObject.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\UnityObject\UnityObjectBehaviour.cs" />
+    <Compile Include="VoxelMonstersUnity\Assets\SleepyUnityTools\UnityObject\UnityObjectHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="VoxelMonstersUnity\Assets\SleepyUnityTools\.gitignore" />
+    <Content Include="VoxelMonstersUnity\Assets\SleepyUnityTools\LICENSE.txt" />
+    <Content Include="VoxelMonstersUnity\config.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VoxelMonstersUnity\Assets\SleepyUnityTools\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

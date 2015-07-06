@@ -19,6 +19,8 @@ public class Locomotion
     int _frames;
     float _time = 0f;
 
+    int _nextScoreAt = 30;
+
     public Locomotion(int index, Locomotion parent)
         : base()
     {
@@ -90,9 +92,16 @@ public class Locomotion
                 }
             }
 
-            var dist = _monster.Joints.Values.Max(j => j.transform.position.z) - _monster.WorldPosition.z;
+            var score = _monster.Joints["Head"].position.y;
+            if (score > FinalScore)
+                FinalScore = score;
+            //var dist = _monster.Joints.Values.Max(j => j.transform.position.z) - _monster.WorldPosition.z;
 
-            FinalScore = dist + _monster.Joints["Head"].position.y + _monster.Joints["Waist"].position.y;
+            //if(_frames >= _nextScoreAt)
+            //{
+            //    _nextScoreAt += 30;
+            //    FinalScore += dist;// +(_monster.Joints["Head"].position.y * 0.4f);
+            //}
         }
     }
 

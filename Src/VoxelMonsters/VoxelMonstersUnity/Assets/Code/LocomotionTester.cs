@@ -17,12 +17,16 @@ public class LocomotionTester : MonoBehaviour
     private int _childrenToMutate;
     private string[] _configLines;
 
+    Locomotion _bestAllTime;
+    private int _bestInject;
+
     IEnumerator DoPreform()
     {
         var logs = new LocoLogs();
         _monsPerRound = 40;
         _monsToKeep = 6;
         _childrenToMutate = 6;
+        _bestInject = 1;
 
         Application.RegisterLogCallback(OnLog);
 
@@ -37,6 +41,18 @@ public class LocomotionTester : MonoBehaviour
             var i = 0;
             for (var bestIndex = 0; bestIndex < bestLocos.Count; ++bestIndex )
             {
+                if (_bestInject > 0 
+                    && bestIndex >= _monsToKeep - _bestInject && _bestAllTime != null)
+                {
+                    //Use best alltime
+                    for (var childIndex = 0; childIndex < _childrenToMutate; ++childIndex)
+                    {
+                        locos.Add(new Locomotion(_monsPerRound - i - 1, _bestAllTime));
+                        i++;
+                    }
+                    continue;
+                }
+
                 for (var childIndex = 0; childIndex < _childrenToMutate; ++childIndex)
                 {
                     //Index modified so children appear at front
@@ -60,15 +76,14 @@ public class LocomotionTester : MonoBehaviour
 
             bestLocos = locos.OrderByDescending(loco => loco.FinalScore).Take(_monsToKeep).ToList();
 
+            var best = bestLocos.First();
+            if (_bestAllTime == null || best.FinalScore > _bestAllTime.FinalScore)
+                _bestAllTime = best;
+
             if (bestLocos.First().FinalScore > TopScore)
             {
                 TopScore = bestLocos.First().FinalScore;
                 TopScoreGen = Generation;
-            }
-
-            foreach(var best in bestLocos)
-            {
-                Debug.Log("Best was " + best.Index + " with dist " + best.FinalScore);
             }
 
             foreach (var l in locos)
@@ -105,6 +120,8 @@ public class LocomotionTester : MonoBehaviour
             _monsPerRound = int.Parse(config["monsPerRound"]);
             _monsToKeep = int.Parse(config["monsToKeep"]);
             _childrenToMutate = int.Parse(config["childrenToMutate"]);
+            _bestInject = int.Parse(config["bestInject"]);
+
             Time.timeScale = float.Parse(config["timescale"]);
         }
         catch (Exception e)
@@ -124,7 +141,7 @@ public class LocomotionTester : MonoBehaviour
         var guiRect = new Rect(0, 0, Screen.width, Screen.height);
         cameraRotate.UnityGUI += (u) => 
             {
-                var guiText =  string.Format("Generation: {0}\nBest Score: {1} (distance + head height + waist height, in gen: {2})\nv0.3 tunning for {3}",
+                var guiText =  string.Format("Generation: {0}\nBest Score: {1} (distance + head height + waist height, in gen: {2})\nv0.4 running for {3}",
                     Generation,
                     TopScore,
                     TopScoreGen,

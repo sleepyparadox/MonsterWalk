@@ -17,7 +17,7 @@ public class LocoStep
     public float LastAt = -10000;
     public float NextAt = 10000;
 
-    const float MaxForce = 100 * 10000f;
+    const float MaxForce = 10000000f;
 
     public static LocoStep SpawnNew(string joint)
     {
@@ -25,7 +25,7 @@ public class LocoStep
         {
             Joint = joint,
             At = UnityEngine.Random.Range(0f, LocoStep.GaitDuration),
-            Force = UnityEngine.Random.Range(1, 100) * 10000f,
+            Force = MaxForce * MaxForce,
             Duration = UnityEngine.Random.Range(0f, LocoStep.GaitDuration),
             Rotation = new Vector3(UnityEngine.Random.Range(-1, 1), UnityEngine.Random.Range(-1, 1), UnityEngine.Random.Range(-1, 1))
         };

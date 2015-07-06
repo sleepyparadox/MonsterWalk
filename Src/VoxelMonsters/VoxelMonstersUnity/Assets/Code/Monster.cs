@@ -46,9 +46,9 @@ public class Monster : UnityObject
 
     void RecursivelyPopulateJoints(GameObject obj)
     {
-        //var joint = obj.GetComponent<CharacterJoint>();
+        var joint = obj.GetComponent<CharacterJoint>();
         var rigid = obj.GetComponent<Rigidbody>();
-        if (/*joint != null &&*/ rigid != null)
+        if (joint != null && rigid != null)
         {
             Joints.Add(obj.name, rigid);
         }
